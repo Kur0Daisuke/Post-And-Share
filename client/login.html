@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect - Login or Sign Up</title>
+    <style>
+        /* CSS remains the same as the previous version for styling */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f3f4f6; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .auth-card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center; }
+        h1 { margin-bottom: 10px; font-size: 24px; color: #1da1f2; }
+        .form-group { text-align: left; margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: 600; }
+        input { width: 100%; padding: 12px; border: 1px solid #ccd6dd; border-radius: 8px; font-size: 16px; }
+        button { width: 100%; padding: 12px; background-color: #1da1f2; color: white; border: none; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .toggle-text { margin-top: 20px; font-size: 14px; color: #657786; }
+        .toggle-link { color: #1da1f2; font-weight: bold; cursor: pointer; }
+        .hidden { display: none; }
+        #message { margin-top: 15px; font-size: 14px; min-height: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <div id="loginSection">
+            <h1>Login</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit">Sign In</button>
+            </form>
+            <p class="toggle-text">Don't have an account? <span class="toggle-link" onclick="toggleAuth()">Sign up</span></p>
+        </div>
+
+        <div id="signupSection" class="hidden">
+            <h1>Create Account</h1>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" style="background-color: #000;">Join Now</button>
+            </form>
+            <p class="toggle-text">Already have an account? <span class="toggle-link" onclick="toggleAuth()">Log in</span></p>
+        </div>
+
+        <p id="message"></p>
+    </div>
+
+    <script src="./js/login.js" defer></script>
+</body>
+</html>

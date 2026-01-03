@@ -41,6 +41,23 @@ app.post("/login", async (req, res) => {
 
 })
 
+app.post("/newPost", async (req, res) => {
+    const {PostTitle, PostContent, PostAttachment} = req.body;
+    try{
+        pool = await new sql.ConnectionPool(config).connect()
+        let request = pool.request();
+        await request
+        .input("PostTitle", PostTitle)
+        .input("PostContent",PostContent)
+        .input("PostAttachment", PostAttachment)
+        .query`insert into dbo.PostTable (PostTitle,PostContent,PostAttachment) Values (@PostTitle,@PostContent, @PostAttachment)`;
+
+        res.status(201).json({message: 'Post added successfully'})
+    }catch(err){
+        res.status(404).json({message: err})
+    }
+}) 
+
 app.post("/newAccount", async (req, res) => {
     const {email, password, username} = req.body;
     

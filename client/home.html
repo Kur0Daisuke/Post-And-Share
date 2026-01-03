@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Home</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <b>Post And Share</b>
+        </div>
+        
+        <div class="profile-container">
+            <button class="newPost">Make a new post</button>
+            <div class="profile-trigger" id="profileBtn"></div>
+            
+            <div class="dropdown-menu" id="dropdownMenu">
+                <div class="dropdown-item"><strong>@Username</strong></div>
+                <div class="divider"></div>
+                <div class="dropdown-item">Profile</div>
+                <div class="dropdown-item">Settings & Privacy</div>
+                <div class="dropdown-item">Help Center</div>
+                <div class="divider"></div>
+                <div class="dropdown-item" style="color: red;">Log out</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="home-container">
+        <div class="feed-header">Home</div>
+        
+        <div class="post-mock">
+            <div class="line" style="width: 80%;"></div>
+            <div class="line"></div>
+            <div class="line short"></div>
+        </div>
+        <div class="post-mock">
+            <div class="line" style="width: 90%;"></div>
+            <div class="line"></div>
+            <div class="line short"></div>
+        </div>
+        <div class="post-mock">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line short"></div>
+        </div>
+    </div>
+
+    <div class="createPostBox active">
+        <div class="container">
+        <div class="feed-header">
+            <nav>
+                <b>Creating a post</b>
+                <button class="closeButton">close</button>
+            </nav>
+        </div>
+        
+        <div class="post-mock">
+            <form id="UploadForm">
+                <input type="text" name="PostTitle" required placeholder="Post Title">
+                <input type="text" name="PostContent" required placeholder="Post Content">
+                <input type="file" name="PostAttachment" id="Attachments" placeholder="Post Attachments">
+                <button type="submit">Upload</button>
+            </form>
+            
+        </div>
+    </div>
+    </div>
+
+    <script src="./js/main.js"></script>
+
+</body>
+</html>
