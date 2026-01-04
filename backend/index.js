@@ -25,7 +25,7 @@ app.post("/login", async (req, res) => {
     const {password, email} = req.body;
     // userID = req.query.id;
     
-    results = await sql.query`select * from dbo.UserTable where Email=${email}`;
+    const results = await sql.query`select * from dbo.UserTable where Email=${email}`;
     if(!results) return res.status(404).send("not found")
     
     hash = await deriveKeyFromPassword(password, new Uint8Array(Buffer.from(results.recordset[0].Salt, 'hex')))
@@ -33,7 +33,7 @@ app.post("/login", async (req, res) => {
     if(hash == results.recordset[0].PasswordHash) {
         userData = {
             ID: results.recordset[0].ID,
-            Username: results.recordsets[0].username,
+            Username: results.recordsets[0][0].Username,
             email: email,
         }
         res.send(JSON.stringify(userData))
@@ -42,21 +42,52 @@ app.post("/login", async (req, res) => {
 })
 
 app.post("/newPost", async (req, res) => {
-    const {PostTitle, PostContent, PostAttachment} = req.body;
+    const {PostTitle, PostContent, PostAttachment, ID} = req.body;
+    const attachmentBuffer = Buffer.from(PostAttachment, 'base64');
     try{
         pool = await new sql.ConnectionPool(config).connect()
         let request = pool.request();
         await request
         .input("PostTitle", PostTitle)
         .input("PostContent",PostContent)
-        .input("PostAttachment", PostAttachment)
-        .query`insert into dbo.PostTable (PostTitle,PostContent,PostAttachment) Values (@PostTitle,@PostContent, @PostAttachment)`;
+        .input("PostAttachment", attachmentBuffer)
+        .input("UserId", ID)
+        .query`insert into dbo.PostTable (UserId,PostTitle,PostContent,PostAttachments) Values (@UserId,@PostTitle,@PostContent, @PostAttachment)`;
 
         res.status(201).json({message: 'Post added successfully'})
     }catch(err){
         res.status(404).json({message: err})
     }
 }) 
+
+app.get("/getPosts", async (req,res) => {
+    const pageNumber = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    try{
+        const offset = (pageNumber - 1) * pageSize;
+
+        const results = await sql
+        .query`
+            SELECT 
+                p.UserId, 
+                p.PostTitle, 
+                p.PostContent, 
+                p.PostAttachments,
+                p.CreatedAt,
+                p.ViewCount,
+                u.Username
+            FROM dbo.PostTable p
+            INNER JOIN dbo.UserTable u ON p.UserId = u.ID
+            ORDER BY UserId DESC  -- Or use a PostId/Date column if you have one
+            OFFSET ${offset} ROWS
+            FETCH NEXT ${pageSize} ROWS ONLY;
+        `;
+        res.status(201).json({message: results})
+    }catch(err){
+        console.log("err")
+        res.status(201).json({message: err})
+    }
+})
 
 app.post("/newAccount", async (req, res) => {
     const {email, password, username} = req.body;

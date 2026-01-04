@@ -7,7 +7,6 @@
 body {
   background-color: #f3f4f6;
   color: #111;
-  overflow: hidden;
 }
 
 /* Top Navigation */
@@ -109,18 +108,85 @@ nav {
   border-bottom: 1px solid #eee;
 }
 
+/* Enhanced Post Design */
 .post-mock {
-  padding: 20px;
-  border-bottom: 1px solid #eee;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: background 0.2s;
+  cursor: pointer;
 }
-.line {
-  height: 10px;
-  background: #e1e8ed;
-  margin-bottom: 10px;
-  border-radius: 5px;
+
+.post-mock:hover {
+  background-color: rgba(0, 0, 0, 0.02);
 }
-.line.short {
-  width: 40%;
+
+/* Header: Avatar and Username */
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.post-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #ccd6dd;
+  border-radius: 50%;
+}
+
+.post-username {
+  font-weight: bold;
+  color: #111;
+}
+
+.post-date {
+  color: #536471;
+  font-size: 0.9rem;
+  margin-left: 4px;
+}
+
+/* Body: Content and Image */
+.post-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: #0f1419;
+}
+
+.post-content {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #0f1419;
+  margin-bottom: 12px;
+  white-space: pre-wrap; /* Preserves line breaks from database */
+}
+
+.post-image-container img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid #eff3f4;
+}
+
+/* Footer: Views and Stats */
+.post-footer {
+  display: flex;
+  padding-top: 8px;
+}
+
+.post-stats {
+  color: #536471;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.view-icon {
+  font-style: normal;
 }
 
 button {
@@ -153,4 +219,8 @@ button {
 }
 .createPostBox.active{
   top: 0%;
+}
+
+.postImage{
+  width: 200px;
 }

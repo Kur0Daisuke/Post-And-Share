@@ -29,9 +29,11 @@ async function handleAuth(event, endpoint) {
     if (response.ok) {
       messageDisplay.style.color = "green";
       messageDisplay.innerText = res.message || "Success!";
-
-      localStorage.setItem("UserData", JSON.stringify({email: data.email}))
-      window.location.href = "./home.html";
+      if(endpoint == "login") {
+        localStorage.setItem("UserData", JSON.stringify(res))
+        window.location.href = "./home.html";
+      }
+      
       
     } else {
       messageDisplay.style.color = "red";
