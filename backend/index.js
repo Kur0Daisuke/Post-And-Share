@@ -74,7 +74,10 @@ app.get("/getPosts", async (req,res) => {
                 p.PostContent, 
                 p.PostAttachments,
                 p.CreatedAt,
+                p.Upvotes,
+                p.Downvotes,
                 p.ViewCount,
+                p.ID,
                 u.Username
             FROM dbo.PostTable p
             INNER JOIN dbo.UserTable u ON p.UserId = u.ID
@@ -115,6 +118,66 @@ app.post("/newAccount", async (req, res) => {
     }
     
     // console.log("pool connected")
+})
+
+const ReactPost = new Promise((resolve, reject) => {
+  // Simulating an asynchronous operation with setTimeout
+  setTimeout(() => {
+    let success = true; // Could be a fetch result or error
+    if (success) {
+      resolve("Success! Data received."); 
+    } else {
+      reject("Error! Operation failed.");
+    }
+  }, 1000); 
+});
+async function React(UserID, PostID, PostType, VoteType) {
+    let pool = await new sql.ConnectionPool(config).connect()
+    let request = pool.request();
+    await request
+        .input("UserID", UserID)
+        .input("PostID", PostID)
+        .input("PostType", PostType)
+        .input("VoteType", VoteType)
+        .query(`Insert into dbo.UpAndDownVotes(UserID, PostID, PostType, VoteType) Values (@UserID, @PostID, @PostType, @VoteType)`)
+    return Promise.resolve("Hello");
+}
+
+app.post("/react", async(req,res) => {
+    const {UserID, PostID, PostType, VoteType} = req.body;
+    const CurrentResults = await sql.query`select * from dbo.UpAndDownVotes where UserID=${UserID} AND PostID=${PostID} AND VoteType=${VoteType}`;
+    const OppositeEesults = await sql.query`select * from dbo.UpAndDownVotes where UserID=${UserID} AND PostID=${PostID} AND VoteType=${VoteType=="Upvote"?"Downvote":"Upvote"}`;
+    if(CurrentResults.recordsets[0].length == 0 && OppositeEesults.recordsets[0].length == 0) {
+        console.log(req.body)
+        await React(UserID, PostID, PostType, VoteType)
+        console.log("added")
+        res.status(404).json({message: "Upvoted"})
+    }else if(CurrentResults.recordsets[0].length != 0) {
+        await sql.query(`DELETE from dbo.UpAndDownVotes where UserID=${UserID} AND PostID=${PostID} AND VoteType='${VoteType}'`)
+        res.status(404).json({message: "Removed"})
+    }else if(OppositeEesults.recordsets[0].length != 0) {
+        await sql.query(`DELETE from dbo.UpAndDownVotes where UserID=${UserID} AND PostID=${PostID} AND VoteType='${VoteType=="Upvote"?'Downvote':'Upvote'}'`)
+        await React(UserID, PostID, PostType, VoteType)
+        console.log("added")
+        res.status(404).json({message: "Upvoted"})
+    }
+    sql.query`
+        UPDATE dbo.PostTable
+        SET Upvotes = (
+            SELECT COUNT(*) 
+            FROM dbo.UpAndDownVotes 
+            WHERE PostID = ${PostID} AND VoteType='Upvote'
+        )
+        WHERE ID = ${PostID};
+
+        UPDATE dbo.PostTable
+        SET Downvotes = (
+            SELECT COUNT(*) 
+            FROM dbo.UpAndDownVotes 
+            WHERE PostID = ${PostID} AND VoteType='Downvote'
+        )
+        WHERE ID = ${PostID};
+    `
 })
 
 app.listen(port,async () => {

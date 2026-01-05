@@ -224,3 +224,10 @@ button {
 .postImage{
   width: 200px;
 }
+
+.likeButton{
+  background: white;
+  width: 100px;
+  color: black;
+  border: 2px solid rgb(204, 204, 204);
+}
